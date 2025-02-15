@@ -15,7 +15,7 @@ resource "aws_instance" "terraform-ec2-production" {
     aws_route_table_association.public-rtb-assoc-1
   ]
   tags = {
-    Name = "Public EC2 Instance 1"
+    Name = "Public EC2 Instance 1-Production"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_instance" "terraform-ec2-testing" {
     aws_route_table_association.public-rtb-assoc-2
   ]
   tags = {
-    Name = "Public EC2 Instance 2"
+    Name = "Public EC2 Instance 2-Testing"
   }
 }
 
@@ -55,6 +55,6 @@ resource "aws_instance" "terraform-ec2-development" {
     aws_route_table_association.public-rtb-assoc-2
   ]
   tags = {
-    Name = "Public EC2 Instance 3"
+    Name = "Public EC2 Instance 3-Development"
   }
 }
