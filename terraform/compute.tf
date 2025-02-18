@@ -7,7 +7,7 @@ resource "aws_instance" "terraform-ec2-production" {
   availability_zone           = var.availability_zone_1
   vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name                    = var.key_pair_name
+  key_name                    = var.keypair_name
 
   depends_on = [
     aws_subnet.public-subnet-1,
@@ -27,7 +27,7 @@ resource "aws_instance" "terraform-ec2-testing" {
   availability_zone           = var.availability_zone_2
   vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name                    = var.key_pair_name
+  key_name                    = var.keypair_name
 
   depends_on = [
     aws_subnet.public-subnet-2,
@@ -47,7 +47,7 @@ resource "aws_instance" "terraform-ec2-development" {
   availability_zone           = var.availability_zone_3
   vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name                    = var.key_pair_name
+  key_name                    = var.keypair_name
 
   depends_on = [
     aws_subnet.public-subnet-3, 
@@ -57,4 +57,18 @@ resource "aws_instance" "terraform-ec2-development" {
   tags = {
     Name = "Public EC2 Instance 3-Development"
   }
+}
+
+#? Generation of Ansible inventory file
+resource "local_file" "ansible_inventory" {
+  content = templatefile("${path.module}/ansible_inventory.tpl",
+    {
+      public_ip_production = aws_instance.terraform-ec2-production.public_ip,
+      public_ip_testing    = aws_instance.terraform-ec2-testing.public_ip,
+      public_ip_development = aws_instance.terraform-ec2-development.public_ip
+      ssh_user        = "ubuntu", 
+      private_key     = "${path.module}/../keypairs/${var.keypair_name}.pem"
+    }
+  )
+  filename = "../ansible/ansible_inventory"
 }

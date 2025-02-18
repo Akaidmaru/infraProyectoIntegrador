@@ -1,4 +1,4 @@
-variable "key_pair_name" {
+variable "keypair_name" {
   description = "Nombre del key pair para las instancias EC2"
   type        = string
 }
