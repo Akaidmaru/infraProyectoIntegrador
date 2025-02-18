@@ -1,13 +1,13 @@
 # ***** EC2 Instances *****
 #? Public EC2 Instance 1
 resource "aws_instance" "terraform-ec2-production" {
-  ami           = "ami-0866a3c8686eaeeba"
-  instance_type = "t2.micro"
-  subnet_id = aws_subnet.public-subnet-1.id
-  availability_zone = "us-east-1a"
-  vpc_security_group_ids = [aws_security_group.grupo1-sg.id]
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public-subnet-1.id
+  availability_zone           = var.availability_zone_1
+  vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name = var.key_pair_name
+  key_name                    = var.key_pair_name
 
   depends_on = [
     aws_subnet.public-subnet-1,
@@ -21,13 +21,13 @@ resource "aws_instance" "terraform-ec2-production" {
 
 #? Public EC2 Instance 2
 resource "aws_instance" "terraform-ec2-testing" {
-  ami           = "ami-0866a3c8686eaeeba"
-  instance_type = "t2.micro"
-  subnet_id = aws_subnet.public-subnet-2.id
-  availability_zone = "us-east-1b"
-  vpc_security_group_ids = [aws_security_group.grupo1-sg.id]
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public-subnet-2.id
+  availability_zone           = var.availability_zone_2
+  vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name = var.key_pair_name
+  key_name                    = var.key_pair_name
 
   depends_on = [
     aws_subnet.public-subnet-2,
@@ -41,18 +41,18 @@ resource "aws_instance" "terraform-ec2-testing" {
 
 #? Public EC2 Instance 3
 resource "aws_instance" "terraform-ec2-development" {
-  ami           = "ami-0866a3c8686eaeeba"
-  instance_type = "t2.micro"
-  subnet_id = aws_subnet.public-subnet-2.id
-  availability_zone = "us-east-1b"
-  vpc_security_group_ids = [aws_security_group.grupo1-sg.id]
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public-subnet-3.id 
+  availability_zone           = var.availability_zone_3
+  vpc_security_group_ids      = [aws_security_group.grupo1-sg.id]
   associate_public_ip_address = true
-  key_name = var.key_pair_name
+  key_name                    = var.key_pair_name
 
   depends_on = [
-    aws_subnet.public-subnet-2,
+    aws_subnet.public-subnet-3, 
     aws_security_group.grupo1-sg,
-    aws_route_table_association.public-rtb-assoc-2
+    aws_route_table_association.public-rtb-assoc-3 
   ]
   tags = {
     Name = "Public EC2 Instance 3-Development"
