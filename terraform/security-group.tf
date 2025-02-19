@@ -60,7 +60,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https_ipv6" {
   to_port           = 443
 }
 
-#* Security Group eggress rules for ssh ipv4 and ipv6
+#* Security Group egress rules for all traffic ipv4 and ipv6
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
   security_group_id = aws_security_group.grupo1-sg.id
   cidr_ipv4         = "0.0.0.0/0"

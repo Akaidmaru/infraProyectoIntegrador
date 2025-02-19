@@ -17,7 +17,6 @@ resource "aws_route_table" "public-rtb" {
   }
 }
 
-
 #* Associate route table with public subnet
 resource "aws_route_table_association" "public-rtb-assoc-1" {
   subnet_id      = aws_subnet.public-subnet-1.id

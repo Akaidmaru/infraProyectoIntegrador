@@ -9,7 +9,6 @@ resource "aws_subnet" "public-subnet-1" {
   }
 }
 
-
 #* Create Public Subnet 2
 resource "aws_subnet" "public-subnet-2" {
   vpc_id            = aws_vpc.vpc-grupo1.id
@@ -21,7 +20,6 @@ resource "aws_subnet" "public-subnet-2" {
   }
 }
 
-
 #* Create Public Subnet 3
 resource "aws_subnet" "public-subnet-3" {
   vpc_id            = aws_vpc.vpc-grupo1.id
@@ -32,7 +30,6 @@ resource "aws_subnet" "public-subnet-3" {
     Name = "Public-Subnet-3(Development)"
   }
 }
-
 
 # Load Balancer
 resource "aws_lb" "public-subnet-lb" {
