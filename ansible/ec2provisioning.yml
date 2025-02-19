@@ -1,0 +1,8 @@
+---
+- name: Ubuntu Server Config
+  hosts: one to rule them all
+  become: yes
+  roles:
+    - update_os
+    - ngnix
+    - nodejs
