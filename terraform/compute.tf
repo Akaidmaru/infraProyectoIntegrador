@@ -63,11 +63,11 @@ resource "aws_instance" "terraform-ec2-development" {
 resource "local_file" "ansible_inventory" {
   content = templatefile("${path.module}/ansible_inventory.tpl",
     {
-      public_ip_production = aws_instance.terraform-ec2-production.public_ip,
-      public_ip_testing    = aws_instance.terraform-ec2-testing.public_ip,
-      public_ip_development = aws_instance.terraform-ec2-development.public_ip
+      production_ip = aws_instance.terraform-ec2-production.public_ip,
+      testing_ip    = aws_instance.terraform-ec2-testing.public_ip,
+      development_ip = aws_instance.terraform-ec2-development.public_ip
       ssh_user        = "ubuntu", 
-      private_key     = "${path.module}/../keypairs/${var.keypair_name}.pem"
+      private_key     = "${var.keypair_name}.pem"
     }
   )
   filename = "../ansible/ansible_inventory"
