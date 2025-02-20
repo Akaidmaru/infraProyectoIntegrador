@@ -30,16 +30,3 @@ resource "aws_subnet" "public-subnet-3" {
     Name = "Public-Subnet-3(Development)"
   }
 }
-
-# Load Balancer
-resource "aws_lb" "public-subnet-lb" {
-  name               = "public-subnet-lb"
-  load_balancer_type = "application"
-
-  subnets         = [aws_subnet.public-subnet-1.id, aws_subnet.public-subnet-2.id, aws_subnet.public-subnet-3.id]
-  security_groups = [aws_security_group.grupo1-sg.id]
-
-  tags = {
-    Environment = "Load Balancer Public Subnets"
-  }
-}
