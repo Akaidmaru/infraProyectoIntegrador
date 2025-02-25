@@ -1,15 +1,19 @@
 ---
-- name : Install Curl
-  apt:
-    name: curl
-    state: present
 
 - name : Download and Install FNM
   shell: curl -o- https://fnm.vercel.app/install | bash
   become: false
 
+- name: Add fnm to path
+  shell: echo 'export PATH="$HOME/.fnm:PATH"' >> ~/.bashrc
+  become: false
+
+- name: Reload shell
+  shell: source ~/.bashrc
+  become: false
+
 - name : Install Node.js
-  shell: fnm install 22
+  shell: ~/.fnm/fnm install 22
   become: false
 
 - name : Verify Node.js Installation
