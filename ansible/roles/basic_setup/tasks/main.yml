@@ -1,0 +1,10 @@
+---
+- name: basic_setup
+  apt: 
+    name:
+      - unzip
+      - curl
+      - git
+      - vim
+      - htop
+    state: present
