@@ -1,10 +1,10 @@
-[production_server]
+[production]
 production_server ansible_host=${production_ip}
 
-[testing_server]
+[testing]
 testing_server ansible_host=${testing_ip}
 
-[development_server]
+[development]
 development_server ansible_host=${development_ip}
 
 [all:vars]

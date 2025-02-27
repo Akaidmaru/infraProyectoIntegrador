@@ -1,6 +1,6 @@
 ---
 - name: Ubuntu Server Config
-  hosts: one to rule them all
+  hosts: production:testing:development
   become: yes
   roles:
     - basic_setup
