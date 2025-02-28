@@ -3,6 +3,7 @@ keypairs/
 
 ### Ansible ###
 *.retry
+ansible.log
 
 ### Terraform ###
 # Local .terraform directories
