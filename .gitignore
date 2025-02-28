@@ -4,6 +4,7 @@ keypairs/
 ### Ansible ###
 *.retry
 ansible.log
+ansible_inventory
 
 ### Terraform ###
 # Local .terraform directories
@@ -42,7 +43,7 @@ override.tf.json
 terraform.rc
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
