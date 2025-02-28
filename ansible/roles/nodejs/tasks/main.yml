@@ -1,29 +1,30 @@
 ---
-- name: Install nvm
-  ansible.builtin.shell: >
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-
-- name: Restart bash # ERROR ACÁ, HAY QUE HACER CORRECCIÓN
-  shell: |
-    . ~/.bashrc
-    nvm install node 22
+- name: Instalar nvm
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    fi
   args:
     executable: /bin/bash
-  register: nvm_install
 
+- name: Instalar Node.js versión 22
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    nvm install 22
+  args:
+    executable: /bin/bash
 
-- name: Verify Node.js Installation
-  shell: node -v
+- name: Verificar instalación de Node.js
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    node -v
+  args:
+    executable: /bin/bash
   register: node_version
-  become: false
 
-- name: Verify NPM Installation
-  shell: npm -v
-  register: npm_version
-  become: false
-
-- name: Print Node.js and NPM versions
-  debug:
-    msg: "Node.js version is {{ node_version.stdout }} and NPM version is {{ npm_version.stdout }}"
+- name: Mostrar versión de Node.js instalada
+  ansible.builtin.debug:
+    msg: "La versión de Node.js instalada es {{ node_version.stdout }}"
