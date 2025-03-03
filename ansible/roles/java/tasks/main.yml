@@ -1,0 +1,31 @@
+---
+- name: Descargar Temurin OpenJDK 21
+  ansible.builtin.get_url: 
+    url: "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.6%2B7/OpenJDK21U-jdk_x64_linux_hotspot_21.0.6_7.tar.gz"
+    dest: "/tmp/temurin21.tar.gz"
+    mode: '0644'
+
+- name: Asegurarse de que /usr/lib/jvm exista
+  ansible.builtin.file:
+    path: "/usr/lib/jvm"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Descomprimir Temurin OpenJDK 21
+  ansible.builtin.unarchive:
+    src: "/tmp/temurin21.tar.gz"
+    dest: "/usr/lib/jvm"
+    remote_src: true
+
+- name: Configurar JAVA_HOME para Temurin OpenJDK 21
+  ansible.builtin.lineinfile:
+    path: "/etc/profile"
+    line: "export JAVA_HOME=/usr/lib/jvm/jdk-21.0.6+7"
+    state: present
+
+- name: Instalar Maven
+  apt:
+    name: maven
+    state: present
+  become: true
