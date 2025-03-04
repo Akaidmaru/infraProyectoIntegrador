@@ -24,8 +24,23 @@
     line: "export JAVA_HOME=/usr/lib/jvm/jdk-21.0.6+7"
     state: present
 
+- name: Clonar repo back
+  git:
+    repo: https://github.com/ricardocuellar/proyectoIntegradorBackend-team1.git
+    dest: /var/www/petcare-back
+  become: true
+
 - name: Instalar Maven
   apt:
     name: maven
     state: present
   become: true
+
+- name: Compilar backend con Maven
+  ansible.builtin.shell: |
+    mvn clean install
+  args:
+    chdir: /var/www/petcare-back
+    executable: /bin/bash
+  become: true
+  become_user: ubuntu

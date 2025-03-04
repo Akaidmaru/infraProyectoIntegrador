@@ -6,7 +6,5 @@
     - basic_setup
     - update_os
     - nginx
-    - nodejs
-    - java
-    - clone
-    - compile
+    - front
+    - back
