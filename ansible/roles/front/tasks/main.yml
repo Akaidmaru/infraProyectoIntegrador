@@ -7,17 +7,19 @@
     fi
   args:
     executable: /bin/bash
-  become: yes
+  become: true
   become_user: ubuntu
 
 - name: Instalar Node.js versión 22
   ansible.builtin.shell: |
     export NVM_DIR="$HOME/.nvm"
     source $NVM_DIR/nvm.sh
-    nvm install 22
+    if ! nvm ls 22 > /dev/null 2>&1; then
+      nvm install 22
+    fi
   args:
     executable: /bin/bash
-  become: yes
+  become: true
   become_user: ubuntu
 
 - name: Verificar instalación de Node.js
@@ -27,9 +29,19 @@
     node -v
   args:
     executable: /bin/bash
-  become: yes
+  become: true
   become_user: ubuntu
   register: node_version
+
+- name: Instalar NPM
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    nvm install-latest-npm
+  args:
+    executable: /bin/bash
+  become: true
+  become_user: ubuntu
 
 - name: Mostrar versión de Node.js instalada
   ansible.builtin.debug:
@@ -37,12 +49,24 @@
 
 - name: Clonar repo front
   git:
-    repo: https://github.com/jehansel/DigitalHouse-ProyectoIntegrador-Team1-PetCare.git
+    repo: https://github.com/Akaidmaru/DigitalHouse-ProyectoIntegrador-Team1-PetCare.git ## https://github.com/jehansel/DigitalHouse-ProyectoIntegrador-Team1-PetCare.git
     dest: /var/www/petcare-front
+    force: true
+  become: true
+
+- name: Cambiar permisos del directorio del front y sus archivos
+  ansible.builtin.shell: |
+    chown -R ubuntu:ubuntu /var/www/petcare-front
+    chmod -R 755 /var/www/petcare-front
+  args:
+    executable: /bin/bash
   become: true
 
 - name: Instalar dependencias del front (npm install)
-  ansible.builtin.shell: bash -l -c 'npm install'
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    npm install
   args:
     chdir: /var/www/petcare-front
     executable: /bin/bash
@@ -50,7 +74,10 @@
   become_user: ubuntu
 
 - name: Compilar front con Vite
-  ansible.builtin.shell: bash -l -c 'npm run build'
+  ansible.builtin.shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    npm run build
   args:
     chdir: /var/www/petcare-front
     executable: /bin/bash

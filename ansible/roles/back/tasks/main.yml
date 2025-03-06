@@ -26,8 +26,40 @@
 
 - name: Clonar repo back
   git:
-    repo: https://github.com/ricardocuellar/proyectoIntegradorBackend-team1.git
+    repo:  https://github.com/Akaidmaru/proyectoIntegradorBackend-team1.git ## https://github.com/ricardocuellar/proyectoIntegradorBackend-team1.git
     dest: /var/www/petcare-back
+    force: true
+  become: true
+
+- name: Cambiar permisos del directorio del backend y sus archivos
+  ansible.builtin.shell: |
+    chown -R ubuntu:ubuntu /var/www/petcare-back
+    chmod -R 755 /var/www/petcare-back
+  args:
+    executable: /bin/bash
+  become: true
+
+- name: Crear directorio target con permisos adecuados
+  ansible.builtin.file:
+    path: /var/www/petcare-back/target
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  become: true
+
+- name: Crear archivo .env con variables de entorno
+  ansible.builtin.copy:
+    dest: /var/www/petcare-back/.env
+    content: |
+      DB_USER={{ DB_USER  }}
+      DB_PASSWORD={{ DB_PASSWORD }}
+      JWT_SECRET={{ JWT_SECRET }}
+      AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
+    owner: ubuntu
+    group: ubuntu
+    mode: '0600'
   become: true
 
 - name: Instalar Maven
@@ -36,8 +68,26 @@
     state: present
   become: true
 
+- name: Configurar Maven para usar Temurin OpenJDK 21
+  ansible.builtin.shell: |
+    source /etc/profile
+    echo $JAVA_HOME
+    mvn -v
+  args:
+    executable: /bin/bash
+  register: maven_java_info
+  become: true
+  become_user: ubuntu
+
+- name: Mostrar información de Maven y Java
+  debug:
+    var: maven_java_info.stdout_lines
+
+
 - name: Compilar backend con Maven
   ansible.builtin.shell: |
+    export JAVA_HOME=/usr/lib/jvm/jdk-21.0.6+7
+    echo "JAVA_HOME=$JAVA_HOME"
     mvn clean install
   args:
     chdir: /var/www/petcare-back
