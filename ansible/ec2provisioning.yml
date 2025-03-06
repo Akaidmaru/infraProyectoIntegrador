@@ -1,6 +1,8 @@
 ---
 - name: Ubuntu Server Config
   hosts: production:testing:development
+  vars_files:
+    - vault.yml
   become: yes
   roles:
     - basic_setup
