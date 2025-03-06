@@ -1,5 +1,6 @@
-### Extra Folders ###
+### Extra Folders and Files ###
 keypairs/
+.vault_pass.txt
 
 ### Ansible ###
 *.retry
