@@ -1,0 +1,55 @@
+- name: Instalar MariaDB server
+  apt:
+    name: mariadb-server
+    state: present
+  become: true
+
+- name: Asegurarse de que el servicio de MariaDB esté iniciado y habilitado
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+  become: true
+
+- name: Crear archivo de configuración MySQL para root
+  ansible.builtin.copy:
+    dest: /root/.my.cnf
+    content: |
+      [client]
+      user=root
+      password=root
+    mode: '0600'
+  become: true
+
+- name: Cambiar autenticación de root a mysql_native_password
+  community.mysql.mysql_query:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    query: "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('root');"
+  become: true
+
+- name: Aplicar cambios (FLUSH PRIVILEGES)
+  community.mysql.mysql_query:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    query: "FLUSH PRIVILEGES;"
+  become: true
+
+- name: Eliminar usuarios anónimos (opcional)
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: "root"
+    name: ""
+    host_all: true
+    state: absent
+  become: true
+
+- name: Eliminar la base de datos de prueba (opcional)
+  community.mysql.mysql_db:
+    login_user: root
+    login_password: "root"
+    name: test
+    state: absent
+  become: true

@@ -7,4 +7,5 @@
       - git
       - vim
       - htop
+      - python3-pymysql
     state: present
