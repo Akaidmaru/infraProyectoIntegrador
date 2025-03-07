@@ -62,6 +62,16 @@
     executable: /bin/bash
   become: true
 
+- name: Crear archivo .env con variables de entorno
+  ansible.builtin.copy:
+      dest: /var/www/petcare-back/.env
+      content: |
+          VITE_API_URL={{ VITE_API_URL  }}
+      owner: ubuntu
+      group: ubuntu
+      mode: "0600"
+  become: true
+
 - name: Instalar dependencias del front (npm install)
   ansible.builtin.shell: |
     export NVM_DIR="$HOME/.nvm"
