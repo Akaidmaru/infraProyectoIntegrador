@@ -40,6 +40,7 @@
   git:
       repo: https://github.com/Akaidmaru/proyectoIntegradorBackend-team1.git ## https://github.com/ricardocuellar/proyectoIntegradorBackend-team1.git
       dest: /var/www/petcare-back
+      version: development  
       force: true
   become: true
 
@@ -64,11 +65,14 @@
   ansible.builtin.copy:
       dest: /var/www/petcare-back/.env
       content: |
+          DB_HOST={{ DB_HOST  }}
+          DB_NAME={{ DB_NAME }} 
           DB_USER={{ DB_USER  }}
           DB_PASSWORD={{ DB_PASSWORD }}
           JWT_SECRET={{ JWT_SECRET }}
           AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
+          ALLOWED_ORIGINS=http://{{ production_server }}
       owner: ubuntu
       group: ubuntu
       mode: "0600"
@@ -109,14 +113,22 @@
   become: true
   become_user: ubuntu
 
-- name: Ejecutar aplicación de backend
-  ansible.builtin.shell: |
-    export JAVA_HOME=/usr/lib/jvm/temurin-21
-    export PATH=$JAVA_HOME/bin:$PATH
-    echo "JAVA_HOME=$JAVA_HOME"
-    java -jar target/petcare-0.0.1-SNAPSHOT.jar
-  args:
-    chdir: /var/www/petcare-back
-    executable: /bin/bash
+- name: Generar archivo de unidad systemd para el backend
+  ansible.builtin.template:
+    src: backend.service.j2
+    dest: /etc/systemd/system/backend.service
+    owner: root
+    group: root
+    mode: '0644'
   become: true
-  become_user: ubuntu
+
+- name: Recargar systemd
+  ansible.builtin.command: systemctl daemon-reload
+  become: true
+
+- name: Iniciar y habilitar el servicio backend
+  ansible.builtin.service:
+    name: backend
+    state: started
+    enabled: yes
+  become: true
