@@ -2,8 +2,10 @@
 resource "aws_vpc" "vpc-grupo1" {
   cidr_block                       = var.vpc_cidr
   assign_generated_ipv6_cidr_block = true
+  enable_dns_support               = true
+  enable_dns_hostnames             = true
   tags = {
-      Name = "VPC Grupo 1"
+    Name = "VPC Grupo 1"
   }
 }
 
