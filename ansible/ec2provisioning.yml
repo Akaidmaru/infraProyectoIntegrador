@@ -1,14 +1,13 @@
 ---
 - name: Ubuntu Server Config
-  hosts: production:testing:development
+  hosts: production # production:testing:development
   vars_files:
-    - vault.yml
+    - vault2.yml
   become: yes
   roles:
     - basic_setup
     - update_os
-    - mariadb
     - front
     - nginx
     - back
-    
+    #- mariadb (Not needed since we are using Google Cloud SQL)
