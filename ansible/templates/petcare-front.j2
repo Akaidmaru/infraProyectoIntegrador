@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name {{ inventory_hostname }};  # Asegúrate de que inventory_hostname esté definido correctamente (ej: tudominio.com)
+    server_name {{ inventory_hostname }};
 
     root /var/www/html/petcare-front;
     index index.html;
@@ -12,7 +12,7 @@ server {
 
     # Proxy inverso para el backend
     location /api {
-        proxy_pass http://localhost:8080;  # Ajusta el puerto si tu backend usa otro
+        proxy_pass http://{{ ansible_host  }}:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
