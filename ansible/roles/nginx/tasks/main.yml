@@ -21,7 +21,7 @@
   ansible.builtin.file: 
     path: /etc/nginx/sites-enabled/default
     state: absent
-  rbecome: true
+  become: true
 
 - name: Configurar Nginx para servir el front
   ansible.builtin.template:
