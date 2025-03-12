@@ -1,0 +1,15 @@
+[Unit]
+Description=Backend Proyecto Integrador
+After=network.target
+
+[Service]
+User={{ service_user | default("ubuntu") }}
+WorkingDirectory={{ working_directory | default("/var/www/petcare-back") }}
+EnvironmentFile=/var/www/petcare-back/.env 
+ExecStart=/usr/bin/java -jar {{ jar_path | default("/var/www/petcare-back/target/backendProyectoIntegrador-0.0.1-SNAPSHOT.jar") }}
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+---
+- name: basic_setup
+  apt: 
+    name:
+      - unzip
+      - curl
+      - git
+      - vim
+      - htop
+      # - python3-pymysql (not longer needed due to MariaDB removal)
+    state: present
