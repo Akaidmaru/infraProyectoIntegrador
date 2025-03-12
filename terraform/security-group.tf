@@ -26,6 +26,24 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv6" {
   to_port           = 22
 }
 
+#* Security Group rules for 8080 ipv4 and ipv6
+resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv4_8080" {
+  security_group_id = aws_security_group.grupo1-sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 8080
+  ip_protocol       = "tcp"
+  to_port           = 8080
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv6_8080" {
+  security_group_id = aws_security_group.grupo1-sg.id
+  cidr_ipv6         = "::/0"
+  from_port         = 8080
+  ip_protocol       = "tcp"
+  to_port           = 8080
+}
+
+
 #* Security Group rules for http ipv4 and ipv6
 resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv4" {
   security_group_id = aws_security_group.grupo1-sg.id
@@ -43,6 +61,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv6" {
   to_port           = 80
 }
 
+
 #* Security Group rules for https ipv4 and ipv6
 resource "aws_vpc_security_group_ingress_rule" "allow_https_ipv4" {
   security_group_id = aws_security_group.grupo1-sg.id
@@ -56,8 +75,8 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https_ipv6" {
   security_group_id = aws_security_group.grupo1-sg.id
   cidr_ipv6         = "::/0"
   from_port         = 443
-  ip_protocol       = "tcp"
   to_port           = 443
+  ip_protocol       = "tcp"
 }
 
 #* Security Group egress rules for all traffic ipv4 and ipv6
