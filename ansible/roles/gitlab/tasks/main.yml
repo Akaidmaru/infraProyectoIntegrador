@@ -1,0 +1,44 @@
+# roles/gitlab/tasks/main.yml
+---
+- name: Add GitLab Runner GPG key
+  apt_key:
+    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    state: present
+  become: true
+
+- name: Add GitLab Runner repository
+  apt_repository:
+    repo: "deb https://packages.gitlab.com/runner/gitlab-runner/ubuntu/ {{ ansible_distribution_release }} main"
+    state: present
+  become: true
+
+- name: Install GitLab Runner
+  apt:
+    name: gitlab-runner
+    state: present
+  become: true
+
+- name: Register GitLab Runner (seguro)
+  command: >
+    gitlab-runner register
+    --non-interactive
+    --url "https://gitlab.com/"
+    --registration-token "{{ gitlab_runner_token | default('MISSING_TOKEN') }}"
+    --executor "docker"
+    --docker-image "docker:latest"
+    --description "EC2 Deployment Runner"
+    --tag-list "ec2,aws,deploy"
+    --run-untagged="true"
+    --docker-privileged="false"  # ¡Evita privileged mode por seguridad!
+    --docker-volumes "/var/run/docker.sock:/var/run/docker.sock"
+  args:
+    creates: /etc/gitlab-runner/config.toml
+  become: true
+  no_log: true  # Oculta el token en los logs
+
+- name: Ensure GitLab Runner is running
+  systemd:
+    name: gitlab-runner
+    state: started
+    enabled: yes
+  become: true

@@ -1,0 +1,17 @@
+---
+- name: Ensure app directory exists
+  file:
+    path: /opt/app
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+  become: true
+
+- name: Deploy .env file
+  template:
+    src: environment.j2
+    dest: /opt/app/.env
+    owner: ubuntu
+    group: ubuntu
+    mode: "0600"
+  no_log: true

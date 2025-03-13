@@ -1,0 +1,51 @@
+---
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: true
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+  become: true
+
+- name: Install Docker Engine
+  apt:
+    name: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    update_cache: yes
+    state: present
+  become: true
+
+- name: Add ubuntu user to docker group
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes
+  become: true
+
+- name: Start and enable Docker service (systemd)
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  become: true
+
+- name: Reiniciar sesión para aplicar grupo docker (opcional)
+  shell: newgrp docker
+  when: false
+
+- name: Create .env file for Docker
+  template:
+    src: templates/environment.j2
+    dest: /opt/app/.env
+    owner: ubuntu
+    group: ubuntu
+    mode: "0600"
+  become: true

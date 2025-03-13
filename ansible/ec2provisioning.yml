@@ -8,3 +8,5 @@
     - basic_setup
     - update_os
     - docker
+    - app_config
+    - gitlab
