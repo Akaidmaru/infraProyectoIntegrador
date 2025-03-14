@@ -10,7 +10,7 @@ services:
       - backend
 
   backend:
-    image: ghcr.io/akaidmaru/proyectoIntegradorBackend-team1:latest
+    image: ghcr.io/akaidmaru/proyectointegradorbackend-team1:latest
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
