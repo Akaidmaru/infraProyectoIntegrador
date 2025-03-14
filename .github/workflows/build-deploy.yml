@@ -34,7 +34,7 @@ jobs:
             echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
             
-            # Update containers
-            docker-compose pull
-            docker-compose up -d --force-recreate
+            # Update containers usando el plugin docker compose
+            docker compose pull
+            docker compose up -d --force-recreate
           '

@@ -13,7 +13,7 @@
 
 - name: Install Docker packages
   apt:
-    name: 
+    name:
       - docker-ce
       - docker-ce-cli
       - containerd.io
@@ -35,6 +35,24 @@
     name: docker
     state: started
     enabled: yes
+  become: true
+
+- name: Create application directory
+  file:
+    path: /opt/app
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: "0755"
+  become: true
+
+- name: Copy docker-compose.yml to app directory
+  copy:
+    src: ../../../docker/docker-compose.yml
+    dest: /opt/app/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
   become: true
 
 - name: Reiniciar sesión para aplicar grupo docker (opcional)
