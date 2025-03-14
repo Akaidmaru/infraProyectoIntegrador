@@ -11,7 +11,7 @@
     state: present
   become: true
 
-- name: Install Docker Engine
+- name: Install Docker packages
   apt:
     name: 
       - docker-ce
@@ -40,12 +40,3 @@
 - name: Reiniciar sesión para aplicar grupo docker (opcional)
   shell: newgrp docker
   when: false
-
-- name: Create .env file for Docker
-  template:
-    src: templates/environment.j2
-    dest: /opt/app/.env
-    owner: ubuntu
-    group: ubuntu
-    mode: "0600"
-  become: true
