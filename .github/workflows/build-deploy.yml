@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  workflow_run:
+    workflows: ["Build & Push Frontend", "Build & Push Backend"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /opt/app
+            
+            # Create temporal.env file
+            echo "DB_HOST=${{ secrets.DB_HOST }}" > .env
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+            echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            
+            # Update containers
+            docker-compose pull
+            docker-compose up -d --force-recreate
